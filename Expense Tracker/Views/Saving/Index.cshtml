@@ -1,0 +1,54 @@
+@model IEnumerable<Expense_Tracker.Models.Saving>
+
+@{
+    ViewData["PageTitle"] = "Savings";
+    ViewData["PageActionText"] = "+ New Saving";
+    ViewData["PageActionUrl"] = "/Saving/AddOrEdit";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <ejs-grid id="savings" dataSource="@Model" gridLines="None" allowSorting="true" allowPaging="true">
+            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+            <e-grid-columns>
+                <e-grid-column headerText="Category" field="CategoryTitleWithIcon"></e-grid-column>
+                <e-grid-column headerText="Date" field="Date" width="110px" format="dd-MMM-yy" type="date"
+                    textAlign="Left"></e-grid-column>
+                <e-grid-column headerText="Amount" field="Amount" width="100px" textAlign="Right"></e-grid-column>
+                <e-grid-column headerText="Cost/Unit" field="CostPerUnit" width="100px" format="N2"
+                    textAlign="Right"></e-grid-column>
+                <e-grid-column headerText="Total" field="Total" width="120px" format="N2"
+                    textAlign="Right"></e-grid-column>
+                <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+    <div class="col-md-5">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-piggy-bank fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+<script id="totalColumnTemplate" type="text/x-template">
+    ${
+        function(data) {
+            return (data.Amount * data.CostPerUnit).toFixed(2);
+        }(data)
+    }
+</script>
+
+<script id="actionColumnTemplate" type="text/x-template">
+    <div class="d-flex flex-row justify-content-start">
+        <a class="btn btn-sm no-a-decoration" href="/Saving/AddOrEdit/${SavingId}">
+            <i class="fa-solid fa-pen fa-lg"></i>
+        </a>
+        <form action="/Saving/Delete/${SavingId}" method="post">
+    @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-sm btn-link no-a-decoration"
+            onclick="return confirm(&quot;Are you sure to delete this record?&quot;)">
+                <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+            </button>
+        </form>
+    </div>
+</script>

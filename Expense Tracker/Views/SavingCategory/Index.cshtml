@@ -1,0 +1,45 @@
+@model IEnumerable<Expense_Tracker.Models.SavingCategory>
+
+@{
+    ViewData["PageTitle"] = "Saving Categories";
+    ViewData["PageActionText"] = "+ New Saving Category";
+    ViewData["PageActionUrl"] = "/SavingCategory/AddOrEdit";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <ejs-grid id="categories" dataSource="@Model" gridLines="None" allowSorting="true" allowPaging="true">
+            <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+            <e-grid-columns>
+                <e-grid-column headerText="Category" field="TitleWithIcon"></e-grid-column>
+                <e-grid-column headerText="Code" field="Code" width="100px"></e-grid-column>
+                <e-grid-column headerText="Current Price" field="CurrentPrice" width="120px" textAlign="Right"
+                    format="N2"></e-grid-column>
+                <e-grid-column headerText="Amount" field="Amount" width="100px" textAlign="Right"></e-grid-column>
+                <e-grid-column headerText="Total Value" field="TotalValue" width="120px" textAlign="Right"
+                    format="N2"></e-grid-column>
+                <e-grid-column headerText="Actions" template="#actionColumnTemplate" width="100px"></e-grid-column>
+            </e-grid-columns>
+        </ejs-grid>
+    </div>
+    <div class="col-md-5">
+        <div class="widget h-100 d-flex justify-content-center align-items-center">
+            <i class="fa-solid fa-piggy-bank fa-2xl"></i>
+        </div>
+    </div>
+</div>
+
+<script id="actionColumnTemplate" type="text/x-template">
+    <div class="d-flex flex-row justify-content-start">
+        <a class="btn btn-sm no-a-decoration" href="/SavingCategory/AddOrEdit/${CategoryId}">
+            <i class="fa-solid fa-pen fa-lg"></i>
+        </a>
+        <form action="/SavingCategory/Delete/${CategoryId}" method="post">
+    @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-sm btn-link no-a-decoration"
+            onclick="return confirm(&quot;Are you sure to delete this record?&quot;)">
+                <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+            </button>
+        </form>
+    </div>
+</script>
