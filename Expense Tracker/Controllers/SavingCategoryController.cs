@@ -60,7 +60,7 @@ namespace Expense_Tracker.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type,Code,Amount")] SavingCategory category)
+        public async Task<IActionResult> AddOrEdit([Bind("CategoryId,Title,Icon,Type,Code,Amount,TotalCost")] SavingCategory category)
         {
             if (ModelState.IsValid)
             {
@@ -75,21 +75,16 @@ namespace Expense_Tracker.Controllers
 
                 if (category.CategoryId == 0)
                 {
+                    category.TotalValue = category.TotalValue ?? 0;
                     _context.Add(category);
                 }
                 else
                 {
-                    var existingCategory = await _context.SavingCategories.FindAsync(category.CategoryId);
+                    var existingCategory = await _context.SavingCategories.AsNoTracking().FirstOrDefaultAsync(c => c.CategoryId == category.CategoryId);
                     if (existingCategory != null)
                     {
-                        existingCategory.Title = category.Title;
-                        existingCategory.Icon = category.Icon;
-                        existingCategory.Type = category.Type;
-                        existingCategory.Code = category.Code;
-                        existingCategory.Amount = category.Amount;
-                        existingCategory.CurrentPrice = category.CurrentPrice;
-                        existingCategory.TotalValue = category.TotalValue;
-                        _context.Update(existingCategory);
+                        category.TotalValue = category.TotalValue ?? 0;
+                        _context.Update(category);
                     }
                 }
 

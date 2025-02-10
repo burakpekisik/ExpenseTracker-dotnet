@@ -132,26 +132,38 @@
                 </div>
             </div>
             <div id="savingSplineChart" class="chart-container">
-                <ejs-chart id="saving-spline-chart" background="#1a222b"
-                    palettes="@(new string[] {"#54ffa9", "#ffe91a"})">
+                <ejs-chart id="saving-spline-chart" background="#1a222b" palettes="@(new string[] {"#54ffa9", "#ffe91a"})">
                     <e-chart-primaryxaxis valueType="Category">
                         <e-majorgridlines width="0"></e-majorgridlines>
+                        <e-majorticklines width="0"></e-majorticklines>
+                        <e-linestyle width="0"></e-linestyle>
                     </e-chart-primaryxaxis>
                     <e-chart-primaryyaxis>
-                        <e-majorgridlines width="1" color="#32414d" dashArray="3,5">
-                        </e-majorgridlines>
+                        <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
+                        <e-majorticklines width="0"></e-majorticklines>
+                        <e-linestyle width="0"></e-linestyle>
                     </e-chart-primaryyaxis>
+                    <e-chart-chartarea>
+                        <e-chartarea-border width="0"></e-chartarea-border>
+                    </e-chart-chartarea>
                     <e-series-collection>
-                        <e-series dataSource="@ViewBag.SavingSplineChartData" xName="category" yName="totalValue"
-                            name="Total Value" width="3" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+                        <e-series dataSource="@ViewBag.SavingSplineChartData" xName="date" yName="totalValue" 
+                                 name="Current Value" width="3" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+                            <e-series-marker visible="true">
+                                <e-series-datalabel visible="true" format="C2"></e-series-datalabel>
+                            </e-series-marker>
                         </e-series>
-                        <e-series dataSource="@ViewBag.SavingSplineChartData" xName="category" yName="totalCost"
-                            name="Total Cost" width="3" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+                        <e-series dataSource="@ViewBag.SavingSplineChartData" xName="date" yName="totalCost" 
+                                 name="Total Cost" width="3" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+                            <e-series-marker visible="true">
+                                <e-series-datalabel visible="true" format="C2"></e-series-datalabel>
+                            </e-series-marker>
                         </e-series>
                     </e-series-collection>
-                    <e-chart-legendsettings position="Top">
-                        <e-legendsettings-textstyle color="#fff"></e-legendsettings-textstyle>
+                    <e-chart-legendsettings position="Top" visible="true">
+                        <e-legendsettings-textstyle color="#fff" size="1rem"></e-legendsettings-textstyle>
                     </e-chart-legendsettings>
+                    <e-chart-tooltipsettings enable="true" format="C2"></e-chart-tooltipsettings>
                 </ejs-chart>
             </div>
             <div id="savingDonutChart" class="chart-container" style="display:none;">

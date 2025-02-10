@@ -102,25 +102,37 @@ namespace Expense_Tracker.Controllers
 
             // Saving Categories Chart Data
             var savingCategories = await _context.SavingCategories.ToListAsync();
-            ViewBag.SavingSplineChartData = savingCategories.Select(x => new
+            var savings = await _context.Savings
+                .Include(x => x.SavingCategory)
+                .Where(s => s.Date >= StartDate && s.Date <= EndDate)
+                .ToListAsync();
+
+            var savingsGroupedByDate = savings
+                .GroupBy(s => s.Date.ToString("dd-MMM"))
+                .ToDictionary(g => g.Key, g => new {
+                    totalValue = Math.Round(g.Sum(s => s.SavingCategory.TotalValue ?? 0), 2),
+                    totalCost = Math.Round(g.Sum(s => s.Total), 2)
+                });
+
+            ViewBag.SavingSplineChartData = LastSevenDays.Select(day => new
             {
-                category = x.Title,
-                totalValue = x.TotalValue ?? 0,
-                totalCost = x.TotalCost
-            });
+                date = day,
+                totalValue = savingsGroupedByDate.ContainsKey(day) ? savingsGroupedByDate[day].totalValue : 0,
+                totalCost = savingsGroupedByDate.ContainsKey(day) ? savingsGroupedByDate[day].totalCost : 0
+            }).ToList();
 
             // Savings Distribution Chart Data
-            var savings = await _context.Savings
+            var savingsDistribution = await _context.Savings
                 .Include(x => x.SavingCategory)
                 .ToListAsync();
 
-            ViewBag.SavingDonutChartData = savings
+            ViewBag.SavingDonutChartData = savingsDistribution
                 .GroupBy(x => x.SavingCategory)
                 .Select(x => new
                 {
                     categoryTitleWithIcon = x.Key.TitleWithIcon,
                     amount = x.Sum(s => s.Amount),
-                    percentage = (x.Sum(s => s.Amount) / savings.Sum(s => s.Amount)) * 100
+                    percentage = (x.Sum(s => s.Amount) / savingsDistribution.Sum(s => s.Amount)) * 100
                 });
 
             return View();
